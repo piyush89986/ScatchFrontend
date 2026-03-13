@@ -8,7 +8,7 @@ export default function Shop() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch("http://localhost:3000/shop", {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/shop`, {
           method: "GET",
           credentials: "include",
           
@@ -28,7 +28,7 @@ export default function Shop() {
 
   const addToCart = async (productId) => {
     try {
-      const res = await fetch(`http://localhost:3000/addtocart/${productId}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/addtocart/${productId}`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

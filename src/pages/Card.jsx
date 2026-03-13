@@ -8,7 +8,7 @@ export default function Cart() {
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        const res = await fetch("http://localhost:3000/cart", {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/cart`, {
           method: "GET",
           credentials: "include",
         });
