@@ -11,11 +11,11 @@ export default function Shop() {
         const res = await fetch(`${import.meta.env.VITE_API_URL}/shop`, {
           method: "GET",
           credentials: "include",
-          
-          
         });
 
         const data = await res.json();
+        // console.log(data);
+        
         setProducts(data.products);
         setSuccess(data.success || "");
       } catch (error) {
@@ -84,8 +84,9 @@ export default function Shop() {
         
         <div className="w-[75%] h-screen overflow-y-auto pr-5">
           <div className="grid grid-cols-3 gap-5">
-            {products.map((product) => (
+            {products?.map((product) => (
               <div className="w-60" key={product._id}>
+                {console.log(product._id)}
                 <div
                   className="w-full h-52 flex items-center justify-center"
                   style={{ backgroundColor: product.bgcolor }}
