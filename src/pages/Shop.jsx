@@ -14,8 +14,9 @@ export default function Shop() {
         });
 
         const data = await res.json();
-        // console.log(data);
+        console.log(data);
         
+
         setProducts(data.products);
         setSuccess(data.success || "");
       } catch (error) {
@@ -28,11 +29,14 @@ export default function Shop() {
 
   const addToCart = async (productId) => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/addtocart/${productId}`, {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/addtocart/${productId}`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+        },
+      );
 
       const data = await res.json();
       console.log(data);
@@ -50,7 +54,6 @@ export default function Shop() {
     <>
       <Header />
 
-  
       {success.length > 0 && (
         <div className="absolute top-5 left-1/2 -translate-x-1/2 -translate-y-1/2 p-3 rounded-md bg-blue-500">
           <span className="inline-block mt-1 mb-1 text-white">{success}</span>
@@ -58,7 +61,6 @@ export default function Shop() {
       )}
 
       <div className="w-full h-screen flex px-20 py-20 gap-10">
-      
         <div className="w-[25%] flex flex-col gap-6 sticky top-20 h-[calc(100vh-5rem)]">
           <div className="flex items-center gap-2">
             <h3>sort by</h3>
@@ -69,19 +71,30 @@ export default function Shop() {
           </div>
 
           <div className="flex flex-col mt-10 gap-2">
-            <a className="block w-fit" href="#">New Collection</a>
-            <a className="block w-fit" href="#">All Products</a>
-            <a className="block w-fit" href="#">Discounted Products</a>
+            <a className="block w-fit" href="#">
+              New Collection
+            </a>
+            <a className="block w-fit" href="#">
+              All Products
+            </a>
+            <a className="block w-fit" href="#">
+              Discounted Products
+            </a>
           </div>
 
           <div className="mt-10 flex flex-col gap-2">
-            <a className="block w-fit" href="#">Filter by :</a>
-            <a className="block w-fit" href="#">Availability</a>
-            <a className="block w-fit" href="#">Discount</a>
+            <a className="block w-fit" href="#">
+              Filter by :
+            </a>
+            <a className="block w-fit" href="#">
+              Availability
+            </a>
+            <a className="block w-fit" href="#">
+              Discount
+            </a>
           </div>
         </div>
 
-        
         <div className="w-[75%] h-screen overflow-y-auto pr-5">
           <div className="grid grid-cols-3 gap-5">
             {products?.map((product) => (
@@ -94,7 +107,7 @@ export default function Shop() {
                   {product.image && (
                     <img
                       className="h-[12rem]"
-                      src={`data:image/jpeg;base64,${product.image}`}
+                      src={`data:image/*;base64,${product.image}`}
                       alt={product.name}
                     />
                   )}

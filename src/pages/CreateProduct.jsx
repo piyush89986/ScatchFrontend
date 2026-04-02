@@ -23,19 +23,51 @@ const CreateProduct = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  // ✅ UPDATED FUNCTION (API CALL ADDED HERE)
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // 🔗 Backend API integration later
-    const payload = new FormData();
-    Object.entries(formData).forEach(([key, value]) =>
-      payload.append(key, value)
-    );
+    try {
+      const payload = new FormData();
 
-    console.log("Create Product Payload:", Object.fromEntries(payload));
+      Object.entries(formData).forEach(([key, value]) => {
+        payload.append(key, value);
+      });
 
-    // Example success message
-    setSuccess("Product created successfully!");
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/products/create`, {
+        method: "POST",
+        body: payload,
+        credentials: "include",
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Something went wrong");
+      }
+
+      console.log("Response:", data);
+
+      setSuccess(data.message || "Product created successfully!");
+
+      // ✅ Reset form
+      setFormData({
+        name: "",
+        price: "",
+        discount: "",
+        bgcolor: "",
+        panelcolor: "",
+        textcolor: "",
+        image: null,
+      });
+
+      // ✅ Reset file input manually
+      document.querySelector('input[type="file"]').value = "";
+
+    } catch (error) {
+      console.error("Error creating product:", error);
+      setSuccess(error.message);
+    }
   };
 
   return (
@@ -65,6 +97,7 @@ const CreateProduct = () => {
             <h2 className="text-xl font-bold mb-4">Create New Product</h2>
 
             <form onSubmit={handleSubmit} className="space-y-6">
+              
               {/* Product Details */}
               <div>
                 <h3 className="text-lg font-semibold mb-2">Product Details</h3>
@@ -88,6 +121,7 @@ const CreateProduct = () => {
                     placeholder="Product Name"
                     className="border p-2 rounded"
                     onChange={handleChange}
+                    value={formData.name}
                     required
                   />
                   <input
@@ -95,6 +129,7 @@ const CreateProduct = () => {
                     placeholder="Product Price"
                     className="border p-2 rounded"
                     onChange={handleChange}
+                    value={formData.price}
                     required
                   />
                   <input
@@ -102,6 +137,7 @@ const CreateProduct = () => {
                     placeholder="Discount Price"
                     className="border p-2 rounded"
                     onChange={handleChange}
+                    value={formData.discount}
                   />
                 </div>
               </div>
@@ -115,18 +151,21 @@ const CreateProduct = () => {
                     placeholder="Background Color"
                     className="border p-2 rounded"
                     onChange={handleChange}
+                    value={formData.bgcolor}
                   />
                   <input
                     name="panelcolor"
                     placeholder="Panel Color"
                     className="border p-2 rounded"
                     onChange={handleChange}
+                    value={formData.panelcolor}
                   />
                   <input
                     name="textcolor"
                     placeholder="Text Color"
                     className="border p-2 rounded"
                     onChange={handleChange}
+                    value={formData.textcolor}
                   />
                 </div>
               </div>
