@@ -25,7 +25,7 @@ export default function Register() {
 
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_API_URI}/users/register`,
+        `${import.meta.env.VITE_API_URL}/users/register`,
         form,
         { withCredentials: true } // ✅ important for cookies
       );

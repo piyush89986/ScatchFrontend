@@ -8,7 +8,7 @@ export default function Shop() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_URI}/shop`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/shop`, {
           method: "GET",
           credentials: "include",
         });
