@@ -14,7 +14,7 @@ export default function Login() {
     setError("");
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/users/login`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URI}/users/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -25,7 +25,7 @@ export default function Login() {
 
       if (!res.ok) throw new Error(data.message);
 
-      localStorage.setItem("token", data.token);
+      
 
       console.log("Login success:", data);
       // navigate / dashboard later

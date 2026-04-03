@@ -3,23 +3,43 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 export default function Register() {
-  const [fullname, setFullname] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
   const navigate = useNavigate();
 
-  async function handlesubmit(e) {
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  async function handleSubmit(e) {
     e.preventDefault();
+    setLoading(true);
+    setError("");
+
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/users/register`,
-        { fullname, email, password },
-        { withCredentials: true }
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URI}/users/register`,
+        form,
+        { withCredentials: true } // ✅ important for cookies
       );
 
       console.log("REGISTER SUCCESS:", res.data);
+
+      // ✅ No token storage needed (cookie handled automatically)
+
       navigate("/shop");
-    } catch (error) {
-      console.error("REGISTER ERROR:", error.response?.data || error.message);
+    } catch (err) {
+      setError(err.response?.data?.message || "Something went wrong");
+      console.error("REGISTER ERROR:", err);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -32,32 +52,41 @@ export default function Register() {
 
         <h4 className="text-2xl mb-5">create your account</h4>
 
-        <form onSubmit={handlesubmit} className="space-y-3">
-          <input
-            className="input"
-            placeholder="Full Name"
-            value={fullname}
-            onChange={(e) => setFullname(e.target.value)}
-          />
+        {error && <p className="text-red-500">{error}</p>}
 
+        <form onSubmit={handleSubmit} className="space-y-3">
           <input
             className="input"
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            name="name"
+            placeholder="Full Name"
+            value={form.name}
+            onChange={handleChange}
             required
           />
 
           <input
             className="input"
-            placeholder="Password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            name="email"
+            type="email"
+            placeholder="Email"
+            value={form.email}
+            onChange={handleChange}
+            required
           />
 
-          <button className="btn">Create My Account</button>
+          <input
+            className="input"
+            name="password"
+            type="password"
+            placeholder="Password"
+            value={form.password}
+            onChange={handleChange}
+            required
+          />
+
+          <button className="btn" disabled={loading}>
+            {loading ? "Creating..." : "Create My Account"}
+          </button>
         </form>
       </div>
     </div>
