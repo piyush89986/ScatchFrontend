@@ -17,19 +17,19 @@ export default function Login() {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/users/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password }), // ✅ no credentials
       });
 
       const data = await res.json();
 
       if (!res.ok) throw new Error(data.message);
 
-      
+      // ✅ SAVE TOKEN
+      localStorage.setItem("token", data.token);
 
       console.log("Login success:", data);
-      // navigate / dashboard later
-      navigate("/shop");
+
+      navigate("/shop"); // redirect after login
     } catch (err) {
       setError(err.message);
     } finally {
@@ -40,7 +40,7 @@ export default function Login() {
   return (
     <div className="w-1/2 flex items-center justify-center">
       <div className="w-full px-32">
-        <h4 className="text-2xl mb-5">login your account</h4>
+        <h4 className="text-2xl mb-5">Login your account</h4>
 
         {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
 

@@ -1,23 +1,41 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 
 export default function Shop() {
   const [products, setProducts] = useState([]);
   const [success, setSuccess] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
+        const token = localStorage.getItem("token");
+
+        // ❗ Agar token nahi hai → login page
+        if (!token) {
+          navigate("/login");
+          return;
+        }
+
         const res = await fetch(`${import.meta.env.VITE_API_URL}/shop`, {
           method: "GET",
-          credentials: "include",
+          headers: {
+            Authorization: `Bearer ${token}`, // ✅ IMPORTANT
+          },
         });
 
         const data = await res.json();
         console.log(data);
-        
 
-        setProducts(data.products);
+        // ❗ Unauthorized
+        if (!res.ok) {
+          localStorage.removeItem("token");
+          navigate("/login");
+          return;
+        }
+
+        setProducts(data.products || []);
         setSuccess(data.success || "");
       } catch (error) {
         console.error("Error fetching shop data:", error);
@@ -25,17 +43,21 @@ export default function Shop() {
     };
 
     fetchProducts();
-  }, []);
+  }, [navigate]);
 
   const addToCart = async (productId) => {
     try {
+      const token = localStorage.getItem("token");
+
       const res = await fetch(
         `${import.meta.env.VITE_API_URL}/addtocart/${productId}`,
         {
           method: "POST",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-        },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // ✅ IMPORTANT
+          },
+        }
       );
 
       const data = await res.json();
@@ -56,7 +78,9 @@ export default function Shop() {
 
       {success.length > 0 && (
         <div className="absolute top-5 left-1/2 -translate-x-1/2 -translate-y-1/2 p-3 rounded-md bg-blue-500">
-          <span className="inline-block mt-1 mb-1 text-white">{success}</span>
+          <span className="inline-block mt-1 mb-1 text-white">
+            {success}
+          </span>
         </div>
       )}
 
@@ -99,7 +123,6 @@ export default function Shop() {
           <div className="grid grid-cols-3 gap-5">
             {products?.map((product) => (
               <div className="w-60" key={product._id}>
-                {console.log(product._id)}
                 <div
                   className="w-full h-52 flex items-center justify-center"
                   style={{ backgroundColor: product.bgcolor }}

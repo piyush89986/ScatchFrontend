@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 export default function Register() {
@@ -24,19 +23,30 @@ export default function Register() {
     setError("");
 
     try {
-      const res = await axios.post(
+      const res = await fetch(
         `${import.meta.env.VITE_API_URL}/users/register`,
-        form,
-        { withCredentials: true } // ✅ important for cookies
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(form),
+        }
       );
 
-      console.log("REGISTER SUCCESS:", res.data);
+      const data = await res.json();
 
-      // ✅ No token storage needed (cookie handled automatically)
+      if (!res.ok) throw new Error(data.message);
 
+      console.log("REGISTER SUCCESS:", data);
+
+      // ✅ SAVE TOKEN (IMPORTANT)
+      localStorage.setItem("token", data.token);
+
+      // redirect after register
       navigate("/shop");
     } catch (err) {
-      setError(err.response?.data?.message || "Something went wrong");
+      setError(err.message || "Something went wrong");
       console.error("REGISTER ERROR:", err);
     } finally {
       setLoading(false);
