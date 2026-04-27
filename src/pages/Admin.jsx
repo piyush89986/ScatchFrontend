@@ -8,7 +8,7 @@ const Admin = () => {
 
       <div className="w-full h-screen flex px-20 py-20">
         <div className="w-1/4">
-          <a className="block mb-2">All Products</a>
+          <a className="block mb-2">All Product</a>
           <a className="block mb-2">Create new product</a>
         </div>
 

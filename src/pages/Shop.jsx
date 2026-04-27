@@ -21,7 +21,7 @@ export default function Shop() {
         const res = await fetch(`${import.meta.env.VITE_API_URL}/shop`, {
           method: "GET",
           headers: {
-            Authorization: `Bearer ${token}`, // ✅ IMPORTANT
+            Authorization: `Bearer ${token}`, 
           },
         });
 
